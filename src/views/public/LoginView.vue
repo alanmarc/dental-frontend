@@ -57,11 +57,23 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import { useAuthStore } from "../../stores/authStore";
 
-const email = ref(undefined);
-const password = ref(undefined);
+const authStore = useAuthStore();
+const email = ref("");
+const password = ref("");
+const loading = ref(false);
 
 const login = async () => {
-  console.log("login");
+  loading.value = true;
+  try {
+    console.log("vista");
+    await authStore.login(email.value, password.value);
+    console.log("Inicio de sesión exitoso");
+  } catch (error) {
+    console.error("Error al iniciar sesión", error);
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
