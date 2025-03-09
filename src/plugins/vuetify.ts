@@ -16,21 +16,21 @@ export default createVuetify({
     },
   },
   theme: {
-    defaultTheme: "light", // Tema claro por defecto
+    defaultTheme: "light",
     themes: {
       light: {
         colors: {
-          primary: "#1976D2", // Azul
-          secondary: "#424242", // Gris
-          background: "#FFFFFF", // Fondo claro
+          primary: "#1976D2",
+          secondary: "#424242",
+          background: "#FFFFFF",
         },
       },
       dark: {
         dark: true,
         colors: {
-          primary: "#2196F3", // Azul claro
-          secondary: "#616161", // Gris oscuro
-          background: "#121212", // Fondo oscuro
+          primary: "#2196F3",
+          secondary: "#616161",
+          background: "#121212",
         },
       },
     },
