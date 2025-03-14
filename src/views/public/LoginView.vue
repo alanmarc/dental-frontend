@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
+import router from "../../router";
 
 const authStore = useAuthStore();
 const email = ref("");
@@ -70,6 +71,7 @@ const login = async () => {
     console.log("vista");
     await authStore.login(email.value, password.value);
     console.log("Inicio de sesión exitoso");
+    router.push("/dashboard");
   } catch (error) {
     console.error("Error al iniciar sesión", error);
   } finally {
