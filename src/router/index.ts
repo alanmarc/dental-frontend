@@ -18,7 +18,7 @@ import UsersView from "../views/private/users/UsersView.vue";
 const routes: Array<RouteRecordRaw> = [
   // Rutas públicas
   {
-    path: "/",
+    path: "/landing",
     name: "Landing",
     component: LandingView,
   },
@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: "Login",
     component: LoginView,
-    meta: { guestOnly: true }, // Evitar que autenticados accedan al login
+    meta: { guestOnly: true },
   },
   {
     path: "/documentacion",
@@ -83,9 +83,6 @@ router.beforeEach(
 
     // 📌 Asegurar que la sesión esté cargada
     authStore.loadSession();
-
-    console.log("Ruta solicitada:", to.path);
-    console.log("Usuario autenticado:", authStore.isAuthenticated);
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next("/login");

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { AuthState } from "../interfaces/session";
+import type { AuthState, User } from "../interfaces/session";
 import api from "../api";
 
 export const useAuthStore = defineStore("auth", {
@@ -19,36 +19,44 @@ export const useAuthStore = defineStore("auth", {
       try {
         const { data } = await api.post("/login", { email, password });
 
-        this.token = data.data.headers.authorization;
-        this.user = {
-          id: 1,
-          name: email,
-          role: "admin",
-          permissions: ["ver-clientes"],
-        };
+        this.setAuthData({
+          token: data.data.headers.authorization,
+          user: {
+            id: 122,
+            name: "Alan Marcos",
+            email: "admin@example.com",
+            role: "super_admin",
+            permissions: ["view_patients"],
+          },
+        });
 
-        // Guardar en localStorage
-        localStorage.setItem("token", this.token!);
-        localStorage.setItem("user", JSON.stringify(this.user));
-
-        // Configurar token en Axios para futuras peticiones
-        api.defaults.headers.common["Authorization"] = `Bearer ${this.token}`;
+        return data;
       } catch (error) {
-        console.error("Error en login:", error);
+        this.clearAuthData();
         throw error;
       }
     },
 
-    logout() {
+    setAuthData(payload: { token: string; user: User }) {
+      this.token = payload.token;
+      this.user = payload.user;
+
+      // Persistir en localStorage
+      localStorage.setItem("token", payload.token);
+      localStorage.setItem("user", JSON.stringify(payload.user));
+
+      // El interceptor de axios se encargará del header
+    },
+
+    clearAuthData() {
       this.token = null;
       this.user = null;
 
-      // Eliminar de localStorage
+      // Limpiar localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
-      // Eliminar token de Axios
-      delete api.defaults.headers.common["Authorization"];
+      // El interceptor de axios manejará las peticiones sin token
     },
 
     loadSession() {
@@ -58,9 +66,19 @@ export const useAuthStore = defineStore("auth", {
       if (token && user) {
         this.token = token;
         this.user = JSON.parse(user);
+        // No necesitamos configurar Axios aquí, el interceptor lo maneja
+      }
+    },
 
-        // Configurar el token en Axios al recargar la página
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    async refreshToken() {
+      try {
+        const { data } = await api.post("/auth/refresh");
+        this.token = data.token;
+        localStorage.setItem("token", data.token);
+        return data.token;
+      } catch (error) {
+        this.clearAuthData();
+        throw error;
       }
     },
   },

@@ -9,7 +9,7 @@ import { useAuthStore } from "../../../stores/authStore";
 const authStore = useAuthStore();
 
 function logout(): void {
-  authStore.logout();
+  authStore.clearAuthData();
   router.push("/login");
 }
 </script>
