@@ -20,12 +20,16 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: "#092A33", //Azul Oscuro
-          secondary: "#15414D", //Zul marino
-          background: "#f6fdfc", //blanco
-          highlight: "#D3E2E6", //Azul claro fondo
-          success: "#2ECC71", //Verde OK
-          error: "#E63946", //Rojo error
+          primary: "#092A33", // Azul oscuro profundo
+          secondary: "#15414D", // Azul marino
+          accent: "#5A81FA", // Azul eléctrico / rey
+          background: "#F8F9FD", // Blanco con un toque azulado para mejor integración
+          highlight: "#B0DAF1", // Azul claro más vibrante
+          gray: "#696E82", // → Gris azulado
+          success: "#2ECC71", // Verde OK
+          error: "#E63946", // Rojo error
+          warning: "#FFA500", // Naranja para advertencias (opcional)
+          info: "#17A2B8", // Azul turquesa para información (opcional)
         },
       },
       dark: {

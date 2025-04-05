@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar color="primary">
+    <v-app-bar color="accent">
       <v-btn icon @click="drawer = !drawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
@@ -9,13 +9,14 @@
       </v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer color="accent" v-model="drawer" app>
       <v-list>
         <v-list-item
           v-for="item in menuItems"
           :key="item.text"
           :to="item.to"
           link
+          active-class="rounded-lg ml-2"
         >
           <template v-slot:prepend>
             <v-icon>{{ item.icon }}</v-icon>
@@ -33,7 +34,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-container>
+      <v-container class="bg-background mx-2" max-width="100vw">
         <router-view />
       </v-container>
     </v-main>
