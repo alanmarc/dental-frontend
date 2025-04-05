@@ -1,21 +1,34 @@
 import api from "../api";
-import type { Patient } from "../interfaces/patient";
+import type { Patient, PatientFilters } from "../interfaces/patient";
 
-// Obtener todos los pacientes
-export const fetchPatients = async (): Promise<Patient[]> => {
-  const { data } = await api.get("/patients");
+export const fetchPatients = async (
+  filters?: PatientFilters
+): Promise<Patient[]> => {
+  const { data } = await api.get("/patients", {
+    params: filters,
+    paramsSerializer: { indexes: null },
+  });
   return data;
 };
 
-// Agregar un paciente
-export const addPatient = async (
-  patient: Omit<Patient, "id" | "createdAt">
-) => {
+export const getPatientById = async (id: number): Promise<Patient> => {
+  const { data } = await api.get(`/patients/${id}`);
+  return data;
+};
+
+export const addPatient = async (patient: Patient): Promise<Patient> => {
   const { data } = await api.post("/patients", patient);
   return data;
 };
 
-// Eliminar un paciente
-export const deletePatient = async (id: number) => {
+export const updatePatient = async (
+  id: number,
+  patient: Partial<Patient>
+): Promise<Patient> => {
+  const { data } = await api.put(`/patients/${id}`, patient);
+  return data;
+};
+
+export const deletePatient = async (id: number): Promise<void> => {
   await api.delete(`/patients/${id}`);
 };

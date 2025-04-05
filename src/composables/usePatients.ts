@@ -4,24 +4,15 @@ import {
   deletePatient,
   fetchPatients,
 } from "../services/patientService";
-import type { Patient } from "../interfaces/patient";
+import type { Patient, PatientFilters } from "../interfaces/patient";
 
-// Obtener la lista de pacientes con caché
-export const usePatients = () => {
+export const usePatients = (filters?: PatientFilters) => {
   return useQuery<Patient[], Error>({
-    queryKey: ["patients"], // Clave para la caché
-    queryFn: fetchPatients, // Función que obtiene los pacientes
+    queryKey: ["patients", filters],
+    queryFn: () => fetchPatients(filters),
+    keepPreviousData: true,
   });
 };
-
-// Obtener un paciente por ID
-// export const usePatient = (id: number) => {
-//   return useQuery<Patient, Error>({
-//     queryKey: ["patient", id],
-//     queryFn: () => getPatientById(id),
-//     enabled: !!id, // Solo ejecutar si hay un ID
-//   });
-// };
 
 // Agregar un paciente
 export const useAddPatient = () => {
@@ -52,3 +43,12 @@ export const useDeletePatient = () => {
     },
   });
 };
+
+// Obtener un paciente por ID
+// export const usePatient = (id: number) => {
+//   return useQuery<Patient, Error>({
+//     queryKey: ["patient", id],
+//     queryFn: () => getPatientById(id),
+//     enabled: !!id, // Solo ejecutar si hay un ID
+//   });
+// };

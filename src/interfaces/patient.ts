@@ -13,3 +13,9 @@ export interface Patient {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface PatientFilters extends Record<string, unknown> {
+  page?: string;
+  search?: string;
+  branchId?: number;
+}
