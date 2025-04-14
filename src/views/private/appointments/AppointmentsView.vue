@@ -1,8 +1,7 @@
 <template>
   <v-container class="pa-0 d-flex flex-column h-100">
-    <!-- Header -->
-    <v-container class="d-flex justify-space-between align-center py-2 px-0">
-      <h1 class="text-h5">Citas</h1>
+    <v-container class="d-flex justify-space-between align-center py-5 px-0">
+      <h1 class="text-h4 font-weight-bold">Citas</h1>
       <div class="d-flex ga-2">
         <v-btn
           prepend-icon="mdi-plus-thick"
@@ -23,27 +22,71 @@
       </div>
     </v-container>
 
-    <!-- Contenido principal -->
-    <v-container class="d-flex flex-grow-1 pa-0 overflow-hidden">
-      <!-- Sección izquierda - Cards -->
+    <v-container
+      class="d-flex flex-sm-row flex-column pa-0 ga-5 overflow-hidden"
+    >
       <v-container class="pa-0">
-        <div>
-          <v-btn color="transparent" text="Programadas" />
-          <v-btn color="transparent" text="Completadas" />
-          <v-btn color="transparent" text="Cancelado" />
-          <v-btn color="transparent" text="Perdida" />
-          <v-btn color="transparent" text="Todas" />
+        <div class="d-flex flex-wrap ga-2">
+          <v-btn
+            class="text-gray"
+            text="Programadas"
+            :class="{
+              'btn-appoinment-type':
+                typeAppointmentList === AppointmentStatus.SCHEDULED,
+            }"
+            @click="typeAppointmentList = AppointmentStatus.SCHEDULED"
+          />
+          <v-btn
+            class="text-gray"
+            text="Completadas"
+            :class="{
+              'btn-appoinment-type':
+                typeAppointmentList === AppointmentStatus.COMPLETED,
+            }"
+            @click="typeAppointmentList = AppointmentStatus.COMPLETED"
+          />
+          <v-btn
+            class="text-gray"
+            text="Cancelado"
+            :class="{
+              'btn-appoinment-type':
+                typeAppointmentList === AppointmentStatus.CANCELLED,
+            }"
+            @click="typeAppointmentList = AppointmentStatus.CANCELLED"
+          />
+          <v-btn
+            class="text-gray"
+            text="Perdida"
+            :class="{
+              'btn-appoinment-type':
+                typeAppointmentList === AppointmentStatus.MISSED,
+            }"
+            @click="typeAppointmentList = AppointmentStatus.MISSED"
+          />
+          <v-btn
+            class="text-gray"
+            text="Todas"
+            :class="{
+              'btn-appoinment-type':
+                typeAppointmentList === AppointmentStatus.ALL,
+            }"
+            @click="typeAppointmentList = AppointmentStatus.ALL"
+          />
         </div>
         <div v-if="!isLoading">
           Array de citas en cards
-          {{ appointments }}
+          <template v-for="(item, index) in appointments.data">
+            <div>
+              <AppointmentCardComponent :appointment="item" color="info" />
+            </div>
+          </template>
         </div>
         <ProgressComponent v-else />
       </v-container>
       <!-- Sección derecha - Calendario -->
       <v-container
         class="d-flex flex-column pa-0"
-        style="width: 500px; min-width: 300px"
+        style="max-width: 500px; min-width: 300px"
       >
         <VDatePicker
           ref="calendar"
@@ -52,8 +95,17 @@
           :min-date="new Date()"
           expanded
           class="elevation-3 rounded-lg"
-          @click:date="handleDateClick"
+          @update:model-value="handleDateClick"
         />
+        <div class="my-5">
+          <span class="text-h6 font-weight-bold">Cita en curso:</span>
+          <AppointmentCardComponent :appointment="appointments?.data[0]" />
+        </div>
+        <div class="my-5">
+          <span class="text-h6 font-weight-bold">Siguientes:</span>
+          <AppointmentCardComponent :appointment="appointments?.data[0]" />
+          <AppointmentCardComponent :appointment="appointments?.data[0]" />
+        </div>
       </v-container>
     </v-container>
 
@@ -69,21 +121,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useAppointments } from "../../../composables/useAppointments";
 import CreateAppointmentDialog from "./CreateAppointmentDialog.vue";
 import ProgressComponent from "../../../components/layout/ProgressComponent.vue";
+import AppointmentCardComponent from "../../../components/appointments/AppointmentCardComponent.vue";
+import { AppointmentStatus } from "../../../enums/appointmentStatusEnum";
 
-// const filters = ref({ status: "scheduled" });
 const { data: appointments, isLoading } = useAppointments();
 
-// Estado
 const showDialog = ref(false);
 const selectedDate = ref(new Date().toISOString());
+const typeAppointmentList = ref(AppointmentStatus.SCHEDULED);
 
 const exportAppointments = () => {};
 
-const handleDateClick = () => {};
+const handleDateClick = (date: Date | string) => {
+  selectedDate.value = new Date(date).toISOString();
+  showDialog.value = true;
+};
 
 const attrs = ref([
   {
@@ -97,37 +153,12 @@ const handleSaveAppointment = (formData: any) => {
   console.log("Cita guardada:", formData);
   showDialog.value = false; // Opcional: cerrar desde el padre
 };
-
-watch(showDialog, (nuevoValor, viejoValor) => {
-  console.log("Valor anterior:", viejoValor);
-  console.log("Nuevo valor:", nuevoValor);
-});
 </script>
 
-<style>
-.v-calendar {
-  height: 100%;
-}
-
-.appointment-dot {
-  width: 10px;
-  height: 10px;
-}
-
-/* Responsive - Móvil */
-@media (max-width: 780px) {
-  .v-container.flex-grow-1 {
-    flex-direction: column !important;
-  }
-
-  .v-container.flex-grow-1 > .v-container:last-child {
-    width: 100% !important;
-    height: 500px;
-    margin-top: 1rem;
-  }
-
-  .v-container.flex-grow-1 > .v-container:first-child {
-    padding-right: 0 !important;
-  }
+<style scoped>
+.btn-appoinment-type {
+  background-color: rgb(var(--v-theme-accent)) !important;
+  color: #fff !important;
+  position: relative;
 }
 </style>

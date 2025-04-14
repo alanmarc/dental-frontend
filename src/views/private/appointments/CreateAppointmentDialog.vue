@@ -128,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import type { AppointmentFormValues } from "../../../interfaces/appointments";
 import { useForm } from "vee-validate";
 import { appointmentSchema } from "../../../validations/appointmentSchema";
@@ -149,7 +149,7 @@ const closeDialog = () => {
 const initialFormValues: AppointmentFormValues = {
   patientId: null,
   userId: null,
-  dateTime: props.date.toString(),
+  dateTime: props.date,
   duration: 30,
   status: "scheduled",
   reason: "",
@@ -181,6 +181,20 @@ const handleSubmitForm = handleSubmit(
       resetForm();
     } catch (error) {
       console.error("Error al crear cita:", error);
+    }
+  }
+);
+
+watch(
+  () => props.modelValue,
+  (open) => {
+    if (open) {
+      resetForm({
+        values: {
+          ...initialFormValues,
+          dateTime: props.date,
+        },
+      });
     }
   }
 );
