@@ -1,0 +1,17 @@
+/* SweetAlert2 overrides */
+.swal2-container {
+  z-index: 10000 !important;
+}
+
+.swal2-popup {
+  border-radius: 4px !important;
+  padding: 20px !important;
+}
+
+.swal2-title {
+  font-size: 1.25rem !important;
+}
+
+.swal2-footer {
+  background-color: rgb(var(--v-theme-bgError)) !important;
+}

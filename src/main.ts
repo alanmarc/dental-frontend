@@ -7,6 +7,8 @@ import { useAuthStore } from "./stores/authStore";
 import { VueQueryPlugin } from "vue-query";
 import { installCalendar } from "./plugins/calendar";
 import "v-calendar/dist/style.css";
+import "./assets/styles/swal-overrides.css";
+import "sweetalert2/src/sweetalert2.scss";
 
 const pinia = createPinia();
 const app = createApp(App);

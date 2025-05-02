@@ -28,6 +28,7 @@ export default createVuetify({
           gray: "#696E82", // → Gris azulado
           success: "#2ECC71", // Verde OK
           error: "#E63946", // Rojo error
+          bgError: "#fdeaec",
           warning: "#FFA500", // Naranja para advertencias (opcional)
           info: "#17A2B8", // Azul turquesa para información (opcional)
         },

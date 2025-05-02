@@ -129,10 +129,14 @@
 
 <script setup lang="ts">
 import { computed, watch } from "vue";
-import type { AppointmentFormValues } from "../../../interfaces/appointments";
 import { useForm } from "vee-validate";
+
 import { appointmentSchema } from "../../../validations/appointmentSchema";
 import { useAddAppointment } from "../../../composables/useAppointments";
+
+import type { AppointmentFormValues } from "../../../interfaces/appointments";
+import { Alert } from "../../../helpers/alertHelper";
+import { handleApiError } from "../../../helpers/apiErrorHandler";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -179,8 +183,10 @@ const handleSubmitForm = handleSubmit(
     try {
       await createAppointment(formValues);
       resetForm();
+      closeDialog();
+      Alert.success("Cita registrada", "La cita se guardo correctamente");
     } catch (error) {
-      console.error("Error al crear cita:", error);
+      handleApiError(error, "Error al registrar la cita");
     }
   }
 );

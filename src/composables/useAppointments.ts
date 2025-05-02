@@ -30,7 +30,7 @@ export const useAddAppointment = () => {
       queryClient.invalidateQueries(["appointments"]);
     },
     onError: (error) => {
-      console.error("Error adding appointment:", error);
+      throw error;
     },
   });
 };
