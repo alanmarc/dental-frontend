@@ -59,6 +59,8 @@
 import { ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import router from "../../router";
+import { handleApiError } from "../../helpers/apiErrorHandler";
+import { Alert } from "../../helpers/alertHelper";
 
 const authStore = useAuthStore();
 const email = ref("");
@@ -68,12 +70,11 @@ const loading = ref(false);
 const login = async () => {
   loading.value = true;
   try {
-    console.log("vista");
     await authStore.login(email.value, password.value);
-    console.log("Inicio de sesión exitoso");
+    Alert.success("Sesion iniciada", `Bienvenido ${authStore.user?.name}`);
     router.push("/dashboard");
   } catch (error) {
-    console.error("Error al iniciar sesión", error);
+    handleApiError(error);
   } finally {
     loading.value = false;
   }

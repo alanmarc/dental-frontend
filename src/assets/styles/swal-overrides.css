@@ -15,3 +15,8 @@
 .swal2-footer {
   background-color: rgb(var(--v-theme-bgError)) !important;
 }
+
+.custom-swal-popup {
+  display: flex;
+  flex-direction: column !important;
+}

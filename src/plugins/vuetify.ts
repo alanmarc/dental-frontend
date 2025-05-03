@@ -27,6 +27,7 @@ export default createVuetify({
           highlight: "#B0DAF1", // Azul claro más vibrante
           gray: "#696E82", // → Gris azulado
           success: "#2ECC71", // Verde OK
+          bgSuccess: "#d4edda",
           error: "#E63946", // Rojo error
           bgError: "#fdeaec",
           warning: "#FFA500", // Naranja para advertencias (opcional)

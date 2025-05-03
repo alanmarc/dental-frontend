@@ -22,11 +22,23 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const originalRequest = error.config;
+
+    // Evitar redirección si es la ruta de login
+    if (
+      originalRequest.url.includes("/login") &&
+      error.response?.status === 401
+    ) {
+      return Promise.reject(error);
+    }
+
+    // Redirección normal para otros casos de 401
     if (error.response?.status === 401) {
       const authStore = useAuthStore();
       authStore.clearAuthData();
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );
