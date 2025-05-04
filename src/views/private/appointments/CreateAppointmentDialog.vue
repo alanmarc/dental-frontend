@@ -36,9 +36,9 @@
               />
             </v-col>
             <v-col cols="12" sm="6" lg="4">
-              <v-text-field
+              <VueDatePicker
                 :model-value="values.dateTime"
-                @update:modelValue="(val) => updateField('dateTime', val)"
+                @update:modelValue="(val: Date) => updateField('dateTime', val)"
                 :error-messages="errors.dateTime"
                 density="compact"
                 label="Fecha"

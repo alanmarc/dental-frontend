@@ -77,7 +77,11 @@
           Array de citas en cards
           <template v-for="(item, index) in appointments.data">
             <div>
-              <AppointmentCardComponent :appointment="item" color="info" />
+              <AppointmentCardComponent
+                :appointment="item"
+                color="info"
+                :key="index"
+              />
             </div>
           </template>
         </div>
@@ -88,23 +92,30 @@
         class="d-flex flex-column pa-0"
         style="max-width: 500px; min-width: 300px"
       >
-        <VDatePicker
-          ref="calendar"
+        <VueDatePicker
           v-model="selectedDate"
-          :attributes="attrs"
+          :enable-time-picker="false"
+          auto-apply
+          inline
           :min-date="new Date()"
-          expanded
-          class="elevation-3 rounded-lg"
           @update:model-value="handleDateClick"
+          class="elevation-3 rounded-lg"
         />
         <div class="my-5">
           <span class="text-h6 font-weight-bold">Cita en curso:</span>
-          <AppointmentCardComponent :appointment="appointments?.data[0]" />
+          <AppointmentCardComponent
+            v-if="appointments?.data?.length > 0"
+            :appointment="appointments.data[0]"
+          />
         </div>
         <div class="my-5">
           <span class="text-h6 font-weight-bold">Siguientes:</span>
-          <AppointmentCardComponent :appointment="appointments?.data[0]" />
-          <AppointmentCardComponent :appointment="appointments?.data[0]" />
+          <template v-if="appointments?.data?.length > 1">
+            <AppointmentCardComponent :appointment="appointments.data[1]" />
+          </template>
+          <template v-if="appointments?.data?.length > 2">
+            <AppointmentCardComponent :appointment="appointments.data[2]" />
+          </template>
         </div>
       </v-container>
     </v-container>
@@ -140,14 +151,6 @@ const handleDateClick = (date: Date | string) => {
   selectedDate.value = new Date(date).toISOString();
   showDialog.value = true;
 };
-
-const attrs = ref([
-  {
-    key: "today",
-    highlight: true,
-    dates: new Date(),
-  },
-]);
 
 const handleSaveAppointment = (formData: any) => {
   console.log("Cita guardada:", formData);
